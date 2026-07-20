@@ -298,7 +298,13 @@ class RebrickableDL:
         dir_path = self._base_dir / moc_page.relative_dir_path
         dir_path.mkdir(exist_ok=True, parents=True)
 
-        photos_tab_response = self.get_from_cloudflare_url(f"https://{NETLOC_REBRICKABLE}/mocs/{moc_page.id}/photos/")
+        photos_tab_response = self.get_from_cloudflare_url(
+            f"https://{NETLOC_REBRICKABLE}/mocs/{moc_page.id}/photos/",
+            headers={
+                "X-Requested-With": "XMLHttpRequest",
+                "Referer": moc_page.url,
+            },
+        )
         image_links = moc_page.get_image_links(photos_tab_response)
         self._download_parts_xml(moc_page)
         self._download_images(
